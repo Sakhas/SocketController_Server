@@ -22,7 +22,7 @@ public class ServerMain {
 			new Thread(server).start();
 			System.out.println("Server started");
 			
-			DatagramSocket serverSocket = new DatagramSocket(8888, InetAddress.getByName("0.0.0.0")); 
+			DatagramSocket serverSocket = new DatagramSocket(SOCKET_PORT, InetAddress.getByName("0.0.0.0")); 
 			serverSocket.setBroadcast(true);
 			byte[] receive = new byte[11];
 			byte[] sendData = new byte[11];
@@ -32,12 +32,16 @@ public class ServerMain {
 				serverSocket.receive(receivePacket);	
 				String receivedData = new String(receivePacket.getData());
 				System.out.println("RECEIVED: " + receivedData);
+				
 				if(receivedData.equals(KEYWORD)) {
 					System.out.println("Contact made with client");
 		            InetAddress IPAddress = receivePacket.getAddress();
-		            String sendString = InetAddress.getLocalHost().toString() + " " + Integer.toString(SERVER_PORT);
+		            	            
+		            String sendString = getIpFromAddress(InetAddress.getLocalHost().toString()) + " " + Integer.toString(SERVER_PORT);
 		            sendData = sendString.getBytes();
 		            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, receivePacket.getPort());
+		            String data = new String(sendPacket.getData());
+		            System.out.println(data);
 		            serverSocket.send(sendPacket);
 				}
 			}
@@ -45,10 +49,7 @@ public class ServerMain {
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
-		
-		
-		
+		}		
 
 		try {
 		    Thread.sleep(10 * 1000);
@@ -59,6 +60,17 @@ public class ServerMain {
 		server.stop();*/
 	}
 	
+	public static String getIpFromAddress(String address) {
+		
+		String ipAddress = "";
 	
+		for(int i = 0; i < address.length(); i++) {
+			if(Character.isDigit(address.charAt(i)) || address.charAt(i) == '.') {
+				ipAddress += address.charAt(i);
+			}
+			
+		}		
+		return ipAddress;
+	}
 
 }
