@@ -9,15 +9,15 @@ import java.net.Socket;
 
 public class SocketServer implements Runnable {
 
-    protected int          serverPort   = 9000;
+    protected int          serverPort   = 0;
     protected ServerSocket serverSocket = null;
     protected boolean      isStopped    = false;
     protected Thread       runningThread= null;
 	
     public SocketServer(int port) throws IOException {
     	this.serverPort = port;
-    	serverSocket = new ServerSocket(port, 0, InetAddress.getLocalHost());
-    	System.out.println(InetAddress.getLocalHost());
+    	//serverSocket = new ServerSocket(port, 0, InetAddress.getLocalHost());
+    	//System.out.println(InetAddress.getLocalHost());
     }
     
     public void run(){
@@ -78,7 +78,7 @@ public class SocketServer implements Runnable {
         try {
             this.serverSocket = new ServerSocket(this.serverPort);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot open port 9000", e);
+            throw new RuntimeException("Cannot open port" + this.serverPort, e);
         }
     }
 
