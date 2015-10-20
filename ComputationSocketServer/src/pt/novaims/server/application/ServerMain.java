@@ -10,7 +10,8 @@ import pt.novaims.server.model.SocketServer;
 public class ServerMain {
 
 	final static String KEYWORD = "PONG_REQUEST";
-	final static int SERVER_PORT = 9000;
+	final static String KEYWORD_RESPONSE = "PONG_CONNECTING_DATA";
+	final static int SERVER_PORT = 8888;
 	final static int SOCKET_PORT = 8888;
 	
 	public static void main(String[] args) {
@@ -32,6 +33,7 @@ public class ServerMain {
 				serverSocket.receive(receivePacket);	
 				String receivedData = new String(receivePacket.getData());
 				System.out.println("RECEIVED: " + receivedData + " From address: " + receivePacket.getAddress());
+				
 				if(receivedData.equals(KEYWORD)) {
 					System.out.println("Contact made with client\n Client Address: " + receivePacket.getAddress());
 					System.out.println("ok");
@@ -39,7 +41,7 @@ public class ServerMain {
 		            	            
 		            /*String sendString = getIpFromAddress(InetAddress.getLocalHost().toString()) + " " + Integer.toString(SERVER_PORT);
 		            sendData = sendString.getBytes();*/
-		            String sendString = "PONG_CONNECTING_DATA";
+		            String sendString = KEYWORD_RESPONSE;
 		            sendData = sendString.getBytes();
 		            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, receivePacket.getPort());
 		            String data = new String(sendPacket.getData());
