@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 
 import pt.novaims.server.model.SocketServer;
 
 public class ServerMain {
 
-	final static String KEYWORD = "Computation";
-	final static int SERVER_PORT = 9001;
+	final static String KEYWORD = "PONG_REQUEST";
+	final static int SERVER_PORT = 9000;
 	final static int SOCKET_PORT = 8888;
 	
 	public static void main(String[] args) {
@@ -24,24 +23,27 @@ public class ServerMain {
 			
 			DatagramSocket serverSocket = new DatagramSocket(SOCKET_PORT, InetAddress.getByName("0.0.0.0")); 
 			serverSocket.setBroadcast(true);
-			byte[] receive = new byte[11];
-			byte[] sendData = new byte[11];
+			byte[] receive = new byte[12];
+			byte[] sendData = new byte[1500];
 			
 			while(true) {
+				receive = new byte[12];
 				DatagramPacket receivePacket = new DatagramPacket(receive, receive.length);
 				serverSocket.receive(receivePacket);	
 				String receivedData = new String(receivePacket.getData());
-				System.out.println("RECEIVED: " + receivedData);
-				
+				System.out.println("RECEIVED: " + receivedData + " From address: " + receivePacket.getAddress());
 				if(receivedData.equals(KEYWORD)) {
-					System.out.println("Contact made with client");
+					System.out.println("Contact made with client\n Client Address: " + receivePacket.getAddress());
+					System.out.println("ok");
 		            InetAddress IPAddress = receivePacket.getAddress();
 		            	            
-		            String sendString = getIpFromAddress(InetAddress.getLocalHost().toString()) + " " + Integer.toString(SERVER_PORT);
+		            /*String sendString = getIpFromAddress(InetAddress.getLocalHost().toString()) + " " + Integer.toString(SERVER_PORT);
+		            sendData = sendString.getBytes();*/
+		            String sendString = "PONG_CONNECTING_DATA";
 		            sendData = sendString.getBytes();
 		            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, receivePacket.getPort());
 		            String data = new String(sendPacket.getData());
-		            System.out.println(data);
+		            System.out.println("Message: " + data + " sent back to the client");
 		            serverSocket.send(sendPacket);
 				}
 			}

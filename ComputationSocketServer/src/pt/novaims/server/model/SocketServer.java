@@ -3,7 +3,6 @@ package pt.novaims.server.model;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -38,7 +37,7 @@ public class SocketServer implements Runnable {
                 throw new RuntimeException(
                     "Error accepting client connection", e);
             }
-            new Thread(new WorkerRunnable(clientSocket, "Multithreaded Server")).start();
+            new Thread(new WorkerRunnable(clientSocket, "Computation Server")).start();
             System.out.println("Started new Multithread server");
         }
         
@@ -52,10 +51,7 @@ public class SocketServer implements Runnable {
         OutputStream output = clientSocket.getOutputStream();
         long time = System.currentTimeMillis();
 
-        output.write(("HTTP/1.1 200 OK\n\n<html><body>" +
-                "Singlethreaded Server: " +
-                time +
-                "</body></html>").getBytes());
+        output.write(("HTTP/1.1 200 OK\n\n<html><body>" +"Server: " + time + "</body></html>").getBytes());
         output.close();
         input.close();
         System.out.println("Request processed: " + time);
