@@ -26,7 +26,6 @@ public class WorkerRunnable implements Runnable {
             input.close();
             System.out.println("Request processed: " + time);
         } catch (IOException e) {
-            //report exception somewhere.
             e.printStackTrace();
         }
     }

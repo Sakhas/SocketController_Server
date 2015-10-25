@@ -51,7 +51,6 @@ public class ServerMain {
 			}
 			
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}		
 
@@ -71,8 +70,7 @@ public class ServerMain {
 		for(int i = 0; i < address.length(); i++) {
 			if(Character.isDigit(address.charAt(i)) || address.charAt(i) == '.') {
 				ipAddress += address.charAt(i);
-			}
-			
+			}		
 		}		
 		return ipAddress;
 	}
