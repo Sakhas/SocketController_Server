@@ -5,6 +5,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.SlickException;
+
+import pt.novaims.game.model.SlickGame;
 import pt.novaims.server.model.SocketServer;
 
 public class ServerMain {
@@ -21,6 +25,8 @@ public class ServerMain {
 			server = new SocketServer(SERVER_PORT);
 			new Thread(server).start();
 			System.out.println("Server started");
+			
+			startGame();
 			
 			DatagramSocket serverSocket = new DatagramSocket(SOCKET_PORT, InetAddress.getByName("0.0.0.0")); 
 			serverSocket.setBroadcast(true);
@@ -61,6 +67,25 @@ public class ServerMain {
 		}
 		/*System.out.println("Stopping Server");
 		server.stop();*/
+	}
+	
+	public static void startGame() {
+		
+		SlickGame slickGame = new SlickGame("SlickGame");
+		AppGameContainer app;
+		
+		try {
+			app = new AppGameContainer(slickGame);
+			app.setDisplayMode(800, 600, false);
+			app.start();
+			
+		} catch (SlickException e) {
+			System.err.println("Error occured in the game: ");
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 	
 	public static String getIpFromAddress(String address) {
