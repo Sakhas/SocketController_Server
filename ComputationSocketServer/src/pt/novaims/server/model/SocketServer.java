@@ -1,10 +1,14 @@
 package pt.novaims.server.model;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import pt.novaims.game.model.SlickGame;
 
 public class SocketServer implements Runnable {
 
@@ -12,9 +16,12 @@ public class SocketServer implements Runnable {
     protected ServerSocket serverSocket = null;
     protected boolean      isStopped    = false;
     protected Thread       runningThread= null;
+    
+    SlickGame game;
 	
-    public SocketServer(int port) throws IOException {
+    public SocketServer(int port, SlickGame game) throws IOException {
     	this.serverPort = port;
+    	this.game = game;
     	//serverSocket = new ServerSocket(port, 0, InetAddress.getLocalHost());
     	//System.out.println(InetAddress.getLocalHost());
     }
@@ -44,10 +51,18 @@ public class SocketServer implements Runnable {
         System.out.println("Server Stopped.");
     }
 
-    private void processClientRequest(Socket clientSocket) throws IOException {
+ /*   private void processClientRequest(Socket clientSocket) throws IOException {
         InputStream  input  = clientSocket.getInputStream();
+        StringBuilder sb = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(input));
+        String line;
+        while ((line = br.readLine()) != null) {
+			sb.append(line);
+		}
+        String result = new String(sb.toString());
+        br.close();
         
-        System.out.println("Input is: " + input.toString());
+        System.out.println("Input is: " + result);
         OutputStream output = clientSocket.getOutputStream();
         long time = System.currentTimeMillis();
 
@@ -55,7 +70,7 @@ public class SocketServer implements Runnable {
         output.close();
         input.close();
         System.out.println("Request processed: " + time);
-    }
+    }*/
 
     public synchronized boolean isStopped() {
         return this.isStopped;

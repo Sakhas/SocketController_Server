@@ -6,6 +6,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import pt.novaims.game.model.SlickGame;
@@ -18,16 +20,17 @@ public class ServerMain {
 	final static int SERVER_PORT = 8888;
 	final static int SOCKET_PORT = 8888;
 	
+	static SlickGame slickGame;
+	
 	public static void main(String[] args) {
 				
+		//startGame();	
 		SocketServer server;
 		try {
-			server = new SocketServer(SERVER_PORT);
+			server = new SocketServer(SERVER_PORT, slickGame);
 			new Thread(server).start();
 			System.out.println("Server started");
-			
-			startGame();
-			
+					
 			DatagramSocket serverSocket = new DatagramSocket(SOCKET_PORT, InetAddress.getByName("0.0.0.0")); 
 			serverSocket.setBroadcast(true);
 			byte[] receive = new byte[12];
@@ -45,8 +48,6 @@ public class ServerMain {
 					System.out.println("ok");
 		            InetAddress IPAddress = receivePacket.getAddress();
 		            	            
-		            /*String sendString = getIpFromAddress(InetAddress.getLocalHost().toString()) + " " + Integer.toString(SERVER_PORT);
-		            sendData = sendString.getBytes();*/
 		            String sendString = KEYWORD_RESPONSE;
 		            sendData = sendString.getBytes();
 		            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, receivePacket.getPort());
@@ -71,12 +72,14 @@ public class ServerMain {
 	
 	public static void startGame() {
 		
-		SlickGame slickGame = new SlickGame("SlickGame");
+		slickGame = new SlickGame("SlickGame");
 		AppGameContainer app;
 		
 		try {
 			app = new AppGameContainer(slickGame);
 			app.setDisplayMode(800, 600, false);
+			
+			app.setTitle("Slick game");
 			app.start();
 			
 		} catch (SlickException e) {
