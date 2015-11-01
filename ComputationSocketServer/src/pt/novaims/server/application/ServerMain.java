@@ -6,10 +6,9 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
+import pt.novaims.game.application.GameControl;
 import pt.novaims.game.model.SlickGame;
 import pt.novaims.server.model.SocketServer;
 
@@ -24,7 +23,9 @@ public class ServerMain {
 	
 	public static void main(String[] args) {
 				
-		//startGame();	
+		GameControl gameControl = new GameControl();
+		new Thread(gameControl).start();
+		
 		SocketServer server;
 		try {
 			server = new SocketServer(SERVER_PORT, slickGame);

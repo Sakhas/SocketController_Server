@@ -19,8 +19,9 @@ public class SlickGame extends BasicGame {
 	public void render(GameContainer container, Graphics graphics) throws SlickException {
 		graphics.setColor(Color.blue);
 		graphics.setBackground(Color.blue);
-		graphics.drawString("Hello there", 400, 300);
-		graphics.drawRect((float) 1.1, 0,0,0);
+		graphics.drawString("Hello there", 4, 4);
+	
+		graphics.drawRect((float) 200, 300,20,20);
 					
 	}
 
