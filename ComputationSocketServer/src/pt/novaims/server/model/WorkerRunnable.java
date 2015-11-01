@@ -7,14 +7,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import pt.novaims.game.model.SlickGame;
+
 public class WorkerRunnable implements Runnable {
 	
     protected Socket clientSocket = null;
     protected String serverText   = null;
+    protected SlickGame game = null;
 
-    public WorkerRunnable(Socket clientSocket, String serverText) {
+    public WorkerRunnable(Socket clientSocket, String serverText, SlickGame game) {
         this.clientSocket = clientSocket;
         this.serverText   = serverText;
+        this.game = game;
     }
 
     public void run() {
@@ -22,7 +26,7 @@ public class WorkerRunnable implements Runnable {
         	InputStream input  = clientSocket.getInputStream();
             OutputStream output = clientSocket.getOutputStream();
             String inputMessage = getStringFromInputStream(input);
-            System.err.println("WorkerRunnablen Run-metodi, viesti: " + inputMessage);      
+            System.err.println("WorkerRunnable Run-method, message: " + inputMessage);      
         	
         	long time = System.currentTimeMillis();
             output.close();
@@ -33,7 +37,7 @@ public class WorkerRunnable implements Runnable {
         }
     }
     
-	private static String getStringFromInputStream(InputStream is) {
+	private String getStringFromInputStream(InputStream is) {
 
 		BufferedReader br = null;
 		StringBuilder sb = new StringBuilder();
@@ -45,6 +49,8 @@ public class WorkerRunnable implements Runnable {
 			while ((line = br.readLine()) != null) {
 				sb.append(line);
 				System.out.println(line);
+				//game.getPad().setLocation(x, y);
+				
 			}
 
 		} catch (IOException e) {

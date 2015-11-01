@@ -6,10 +6,13 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Shape;
 
 public class SlickGame extends BasicGame {
 
-	Music backgroundMusic;
+	private Music backgroundMusic;
+	private Shape pad;
 	
 	public SlickGame(String title) {
 		super(title);
@@ -17,11 +20,13 @@ public class SlickGame extends BasicGame {
 	
 	@Override
 	public void render(GameContainer container, Graphics graphics) throws SlickException {
-		graphics.setColor(Color.blue);
 		graphics.setBackground(Color.blue);
-		graphics.drawString("Hello there", 4, 4);
-	
-		graphics.drawRect((float) 200, 300,20,20);
+		graphics.setColor(new Color(0, 255, 255));//inside color
+	    graphics.fill(pad);
+	    graphics.setColor(new Color(255, 0, 0));//red, green, blue OUTLINE of circle
+	    graphics.draw(pad);
+
+		
 					
 	}
 
@@ -30,6 +35,7 @@ public class SlickGame extends BasicGame {
 		backgroundMusic = new Music("res/sounds/background1.ogg");
 		backgroundMusic.setVolume(10);
 		backgroundMusic.play();
+		pad = new Circle(400, 550, 10);
 		
 	}
 
@@ -37,6 +43,14 @@ public class SlickGame extends BasicGame {
 	public void update(GameContainer container, int delta) throws SlickException {
 		
 		
+	}
+	
+	public Shape getPad() {
+		return this.pad;
+	}
+	
+	public void setPad(Shape pad) {
+		this.pad = pad;
 	}
 
 }
