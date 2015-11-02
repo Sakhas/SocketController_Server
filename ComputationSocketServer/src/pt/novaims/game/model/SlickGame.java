@@ -21,7 +21,6 @@ public class SlickGame extends BasicGame {
 	
 	public SlickGame(String title) {
 		super(title);
-		this.racket = new RoundedRectangle(WIDTH / 2 - 40, 550, 80, 10, 3);
 	}
 	
 	@Override
@@ -43,7 +42,7 @@ public class SlickGame extends BasicGame {
 		backgroundMusic = new Music("res/sounds/background1.ogg");
 		backgroundMusic.setVolume(10);
 		backgroundMusic.play();
-		//racket = new RoundedRectangle(WIDTH / 2 - 40, 550, 80, 10, 3);
+		racket = new RoundedRectangle(WIDTH / 2 - 40, 550, 80, 10, 3);
 		ball = new Ball(WIDTH / 2, HEIGHT / 2, 6);
 		
 	}
