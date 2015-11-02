@@ -51,12 +51,23 @@ public class SlickGame extends BasicGame {
 	public void update(GameContainer container, int delta) throws SlickException {
 
 		ball.setLocation(ball.getX() + ball.getBallVelocity().getX(), ball.getY() + ball.getBallVelocity().getY());
-			
+		
+		if (ball.getMinX() <= 0) {
+			   ball.getBallVelocity().x = -ball.getBallVelocity().getX();
+			}
+		if (ball.getMaxX() >= WIDTH) {
+		   ball.getBallVelocity().x = -ball.getBallVelocity().getX();
+		}
+		
 		if (ball.getMinY() <= 0)
 		   ball.getBallVelocity().y = -ball.getBallVelocity().getY();
 		if (ball.getMaxY() >= HEIGHT)
 		   ball.getBallVelocity().y = -ball.getBallVelocity().getY();
 		
+		if(ball.intersects(racket)) {
+			ball.getBallVelocity().x = -ball.getBallVelocity().getX();
+			ball.getBallVelocity().y = -ball.getBallVelocity().getY();
+		}
 	}
 	
 	public Shape getRacket() {
