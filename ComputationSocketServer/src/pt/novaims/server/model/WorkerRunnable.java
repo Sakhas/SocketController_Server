@@ -7,12 +7,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
+<<<<<<< HEAD
 import pt.novaims.game.model.SlickGame;
+=======
+import pt.novaims.game.application.GameControl;
+>>>>>>> 54054d1bf66de1316fe030f524fa2be9181aa713
 
 public class WorkerRunnable implements Runnable {
 	
     protected Socket clientSocket = null;
     protected String serverText   = null;
+<<<<<<< HEAD
     protected SlickGame game = null;
 
     public WorkerRunnable(Socket clientSocket, String serverText, SlickGame game) {
@@ -20,6 +25,14 @@ public class WorkerRunnable implements Runnable {
         this.serverText   = serverText;
         this.game = game;
         //persereika
+=======
+    protected GameControl gameControl;
+
+    public WorkerRunnable(Socket clientSocket, String serverText, GameControl gameControl) {
+        this.clientSocket = clientSocket;
+        this.serverText   = serverText;
+        this.gameControl = gameControl;
+>>>>>>> 54054d1bf66de1316fe030f524fa2be9181aa713
     }
 
     public void run() {
@@ -50,7 +63,11 @@ public class WorkerRunnable implements Runnable {
 			while ((line = br.readLine()) != null) {
 				sb.append(line);
 				System.out.println(line);
+<<<<<<< HEAD
 				//game.getPad().setLocation(x, y);
+=======
+				updateControlLocation(line);
+>>>>>>> 54054d1bf66de1316fe030f524fa2be9181aa713
 				
 			}
 
@@ -69,5 +86,19 @@ public class WorkerRunnable implements Runnable {
 		return sb.toString();
 
 	}
+<<<<<<< HEAD
+=======
+	
+	private void updateControlLocation(String message) {
+		Double angle = Double.parseDouble(message);
+		if(gameControl.getSlickGame().getRacket() != null) {
+			if(angle > 0) {
+				gameControl.getSlickGame().getRacket().setLocation(200, 550);
+			} else {
+				gameControl.getSlickGame().getRacket().setLocation(600, 550);
+			}	
+		}
+	}
+>>>>>>> 54054d1bf66de1316fe030f524fa2be9181aa713
 
 }

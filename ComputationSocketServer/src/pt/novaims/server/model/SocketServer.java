@@ -1,5 +1,6 @@
 package pt.novaims.server.model;
 
+<<<<<<< HEAD
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +9,13 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+=======
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import pt.novaims.game.application.GameControl;
+>>>>>>> 54054d1bf66de1316fe030f524fa2be9181aa713
 import pt.novaims.game.model.SlickGame;
 
 public class SocketServer implements Runnable {
@@ -17,9 +25,15 @@ public class SocketServer implements Runnable {
     protected boolean      isStopped    = false;
     protected Thread       runningThread= null;
     
+<<<<<<< HEAD
     SlickGame game;
 	
     public SocketServer(int port, SlickGame game) throws IOException {
+=======
+    GameControl game;
+	
+    public SocketServer(int port, GameControl game) throws IOException {
+>>>>>>> 54054d1bf66de1316fe030f524fa2be9181aa713
     	this.serverPort = port;
     	this.game = game;
     	//serverSocket = new ServerSocket(port, 0, InetAddress.getLocalHost());
