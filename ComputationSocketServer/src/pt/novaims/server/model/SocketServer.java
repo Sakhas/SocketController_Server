@@ -1,13 +1,10 @@
 package pt.novaims.server.model;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import pt.novaims.game.application.GameControl;
 import pt.novaims.game.model.SlickGame;
 
 public class SocketServer implements Runnable {
@@ -17,9 +14,9 @@ public class SocketServer implements Runnable {
     protected boolean      isStopped    = false;
     protected Thread       runningThread= null;
     
-    SlickGame game;
+    GameControl game;
 	
-    public SocketServer(int port, SlickGame game) throws IOException {
+    public SocketServer(int port, GameControl game) throws IOException {
     	this.serverPort = port;
     	this.game = game;
     	//serverSocket = new ServerSocket(port, 0, InetAddress.getLocalHost());

@@ -7,18 +7,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import pt.novaims.game.model.SlickGame;
+import pt.novaims.game.application.GameControl;
 
 public class WorkerRunnable implements Runnable {
 	
     protected Socket clientSocket = null;
     protected String serverText   = null;
-    protected SlickGame game = null;
+    protected GameControl gameControl;
 
-    public WorkerRunnable(Socket clientSocket, String serverText, SlickGame game) {
+    public WorkerRunnable(Socket clientSocket, String serverText, GameControl gameControl) {
         this.clientSocket = clientSocket;
         this.serverText   = serverText;
-        this.game = game;
+        this.gameControl = gameControl;
     }
 
     public void run() {
@@ -49,7 +49,7 @@ public class WorkerRunnable implements Runnable {
 			while ((line = br.readLine()) != null) {
 				sb.append(line);
 				System.out.println(line);
-				//game.getPad().setLocation(x, y);
+				updateControlLocation(line);
 				
 			}
 
@@ -67,6 +67,17 @@ public class WorkerRunnable implements Runnable {
 
 		return sb.toString();
 
+	}
+	
+	private void updateControlLocation(String message) {
+		Double angle = Double.parseDouble(message);
+		if(gameControl.getSlickGame().getRacket() != null) {
+			if(angle > 0) {
+				gameControl.getSlickGame().getRacket().setLocation(200, 550);
+			} else {
+				gameControl.getSlickGame().getRacket().setLocation(600, 550);
+			}	
+		}
 	}
 
 }
