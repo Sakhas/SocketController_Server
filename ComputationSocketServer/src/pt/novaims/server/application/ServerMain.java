@@ -28,11 +28,7 @@ public class ServerMain {
 		
 		SocketServer server;
 		try {
-<<<<<<< HEAD
-			server = new SocketServer(SERVER_PORT, slickGame);
-=======
 			server = new SocketServer(SERVER_PORT, gameControl);
->>>>>>> 54054d1bf66de1316fe030f524fa2be9181aa713
 			new Thread(server).start();
 			System.out.println("Server started");
 					

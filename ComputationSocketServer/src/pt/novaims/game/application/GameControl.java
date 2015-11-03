@@ -7,10 +7,6 @@ import pt.novaims.game.model.SlickGame;
 
 public class GameControl implements Runnable {
 
-<<<<<<< HEAD
-	SlickGame slickGame;
-	
-=======
 	private SlickGame slickGame;
 	
 	public SlickGame getSlickGame() {
@@ -21,7 +17,6 @@ public class GameControl implements Runnable {
 		this.slickGame = slickGame;
 	}
 
->>>>>>> 54054d1bf66de1316fe030f524fa2be9181aa713
 	@Override
 	public void run() {
 		
