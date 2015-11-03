@@ -18,7 +18,7 @@ public class Ball extends Circle {
 
 	public Ball(float centerPointX, float centerPointY, float radius) {
 		super(centerPointX, centerPointY, radius);
-		this.ballVelocity = new Vector2f(-3, 1);		
+		this.ballVelocity = new Vector2f((float) -0.3, (float) 0.4);		
 	}
 	
 	

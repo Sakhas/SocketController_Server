@@ -7,8 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
-
-
+import org.newdawn.slick.geom.Vector2f;
 import pt.novaims.game.application.GameControl;
 
 public class WorkerRunnable implements Runnable {
@@ -16,11 +15,14 @@ public class WorkerRunnable implements Runnable {
     protected Socket clientSocket = null;
     protected String serverText   = null;
     protected GameControl gameControl;
+    protected int width;
 
     public WorkerRunnable(Socket clientSocket, String serverText, GameControl gameControl) {
         this.clientSocket = clientSocket;
         this.serverText   = serverText;
         this.gameControl = gameControl;
+        this.width = gameControl.getApp().getWidth();
+        System.out.println(width);
     }
 
     public void run() {
@@ -71,12 +73,19 @@ public class WorkerRunnable implements Runnable {
 	}
 	private void updateControlLocation(String message) {
 		Double angle = Double.parseDouble(message);
+		Vector2f currLocation;
 		if(gameControl.getSlickGame().getRacket() != null) {
-			if(angle == 0) {
-				gameControl.getSlickGame().getRacket().setLocation(300, 550);
-			} else {
-				gameControl.getSlickGame().getRacket().setLocation(600, 550);
-			}	
-		}
+			currLocation = gameControl.getSlickGame().getRacket().getLocation();
+			
+			if(angle > 0.3 && currLocation.x < width -80) {
+				gameControl.getSlickGame().getRacket().setLocation(currLocation.x + 4, currLocation.y);
+			} else if(angle < 0.3 && angle > 0 && currLocation.x < width -80) {
+				gameControl.getSlickGame().getRacket().setLocation(currLocation.x + 2, currLocation.y);
+			} else if(angle < -0.3 && currLocation.x > 0) {
+				gameControl.getSlickGame().getRacket().setLocation(currLocation.x - 4, currLocation.y);
+			} else if(angle > -0.3 && angle < 0 && currLocation.x > 0) {
+				gameControl.getSlickGame().getRacket().setLocation(currLocation.x - 2, currLocation.y);
+			}
+		}	
 	}
 }

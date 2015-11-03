@@ -47,27 +47,6 @@ public class SocketServer implements Runnable {
         System.out.println("Server Stopped.");
     }
 
- /*   private void processClientRequest(Socket clientSocket) throws IOException {
-        InputStream  input  = clientSocket.getInputStream();
-        StringBuilder sb = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(input));
-        String line;
-        while ((line = br.readLine()) != null) {
-			sb.append(line);
-		}
-        String result = new String(sb.toString());
-        br.close();
-        
-        System.out.println("Input is: " + result);
-        OutputStream output = clientSocket.getOutputStream();
-        long time = System.currentTimeMillis();
-
-        output.write(("HTTP/1.1 200 OK\n\n<html><body>" +"Server: " + time + "</body></html>").getBytes());
-        output.close();
-        input.close();
-        System.out.println("Request processed: " + time);
-    }*/
-
     public synchronized boolean isStopped() {
         return this.isStopped;
     }
