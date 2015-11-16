@@ -41,7 +41,7 @@ public class SlickGame extends BasicGame {
 	
 	@Override
 	public void render(GameContainer container, Graphics graphics) throws SlickException {
-		graphics.setBackground(Color.blue);
+		graphics.setBackground(Color.gray);
 		graphics.setColor(new Color(0, 0, 0));//inside color
 	    graphics.fill(racket);
 	    graphics.fill(ball);
@@ -107,14 +107,13 @@ public class SlickGame extends BasicGame {
 	}
 	
 	public void initTileArray(Graphics graphics) {
-		//tileArray = new Rectangle[ARRAY_ROWS][ARRAY_COLUMNS];
 		tileList = new ArrayList<>();
 		float tileWidthLoc = 50;
 		int tileHeightLoc = 100;
 		for(int i = 0; i < ARRAY_ROWS; i++) {
 			for(int j = 0; j < ARRAY_COLUMNS && tileWidthLoc < WIDTH -50; j++) {			
 				//tileArray[i][j] = new Rectangle((float)tileWidthLoc, (float)tileHeightLoc, (float)TILE_SIZE, (float)TILE_SIZE);
-				tileList.add(new Tile((float)tileWidthLoc, (float)tileHeightLoc, (float)TILE_WIDTH, (float)TILE_HEIGHT, j, graphics));
+				tileList.add(new Tile((float)tileWidthLoc, (float)tileHeightLoc, (float)TILE_WIDTH, (float)TILE_HEIGHT, (int) Math.ceil(Math.random()*3), graphics));
 				//tileList.add(new Rectangle((float)tileWidthLoc, (float)tileHeightLoc, (float)TILE_WIDTH, (float)TILE_HEIGHT));
 				tileWidthLoc += TILE_WIDTH;
 			}
@@ -124,45 +123,31 @@ public class SlickGame extends BasicGame {
 	} 
 	
 	public void drawTileArray(Graphics graphics) {
-		/*
-		for(int i = 0; i < ARRAY_ROWS; i++) {
-			for(int j = 0; j < ARRAY_COLUMNS; j++) {
-				if(tileArray[i][j] != null)
-					graphics.draw(tileArray[i][j]);
-			}
-		}
-		*/
-		
 		for(Tile t : tileList){
-			if(t != null)
+			if(t != null){
+				
+				Color color = t.getCurrentColor();
+				graphics.setColor(color);
+				graphics.fill(t);
 				graphics.draw(t);
+				
+			    graphics.setLineWidth(2);
+			    graphics.setColor(Color.black);
+			    float [] dimensions = t.getRect();
+			    graphics.drawRect(dimensions[0], dimensions[1], dimensions[2], dimensions[3]);
+			}
 		}
 	}
 	
 	public void checkBallInteractionWithTile() {
 		ArrayList <Tile> toRemove = new ArrayList<>();
-		/*
-		for(int i = 0; i < ARRAY_ROWS; i++) {
-			for(int j = 0; j < ARRAY_COLUMNS; j++) {
-				if(tileArray[i][j] != null){
-					if(tileArray[i][j].intersects(ball)) {
-						//Poista/tyhjennä/disabloi tiili.
-						//tileArray[i][j] = null;
-						//tileArray.remove
-						System.out.println("osuma");
-						ball.getBallVelocity().x = -ball.getBallVelocity().getX();
-						ball.getBallVelocity().y = -ball.getBallVelocity().getY();
-					}
-				}
-				
-			}
-		}
-		*/
+		
 		for(Tile t : tileList){
 			if(t.intersects(ball)){
 				ball.getBallVelocity().y = -ball.getBallVelocity().getY();
 				if(t.wasShot() == 0){
 					toRemove.add(t);
+					System.out.println("pitasTuhoutua");
 				}				
 			}
 		}
