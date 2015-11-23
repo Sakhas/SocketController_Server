@@ -10,6 +10,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.RoundedRectangle;
 import org.newdawn.slick.geom.Shape;
@@ -32,6 +33,8 @@ public class SlickGame extends BasicGame {
 	private Rectangle racket;
 	private Ball ball;
 	private int missCount = 0;
+	private int ballsLeft = 3;
+	private boolean ballMissed = false;
 	private boolean gameOver = false;
 	private ArrayList<Tile> tileList;
 	
@@ -48,14 +51,21 @@ public class SlickGame extends BasicGame {
 	   // graphics.setColor(new Color(255, 0, 0));//red, green, blue OUTLINE of circle
 	    graphics.draw(racket);
 	    graphics.drawString("Welcome to SlickGame", 300, 20);
-	    graphics.drawString("Miss count: " + Integer.toString(missCount), WIDTH - 200, 50);
+	    graphics.drawString("Balls left: " + Integer.toString(ballsLeft), WIDTH - 200, 50);
 	    
 	    drawTileArray(graphics);
 	    
-	    if(gameOver) {
-	    	this.init(container);
-	    	gameOver = false;
+	    if(ballMissed) {
+	    	ballMissed = false;
+	    	ballsLeft--;
 	    	missCount++;
+	    	if(ballsLeft == 0){
+	    		ballsLeft = 3;
+	    		this.init(container);
+	    	}
+	    	else {
+	    		this.tryAgain(container);
+	    	}
 	    }	
 					
 	}
@@ -74,6 +84,16 @@ public class SlickGame extends BasicGame {
 		ball.setBallVelocity(ballVelocityVector);
 		initTileArray(container.getGraphics());
 		
+	}
+	
+	public void tryAgain(GameContainer container) throws SlickException{
+		racket = new RoundedRectangle(WIDTH / 2 - 40, 550, RACKET_WIDTH, RACKET_HEIGHT, 3);
+				
+		ball = new Ball((int) Math.ceil(Math.random()*WIDTH), TILE_HEIGHT*ARRAY_ROWS + TILE_HEIGHT_LOC + 20, 6);
+		org.newdawn.slick.geom.Vector2f ballVelocityVector = new org.newdawn.slick.geom.Vector2f();
+		ballVelocityVector.x = (float) ballVelocity;
+		ballVelocityVector.y = (float) ballVelocity;
+		ball.setBallVelocity(ballVelocityVector);
 	}
 
 	@Override
@@ -102,7 +122,7 @@ public class SlickGame extends BasicGame {
 		}
 		
 		if(ball.getLocation().y >= HEIGHT - 20) {
-			gameOver = true;
+			ballMissed = true;
 		}
 	}
 	
@@ -112,9 +132,7 @@ public class SlickGame extends BasicGame {
 		int tileHeightLoc = 100;
 		for(int i = 0; i < ARRAY_ROWS; i++) {
 			for(int j = 0; j < ARRAY_COLUMNS && tileWidthLoc < WIDTH -50; j++) {			
-				//tileArray[i][j] = new Rectangle((float)tileWidthLoc, (float)tileHeightLoc, (float)TILE_SIZE, (float)TILE_SIZE);
 				tileList.add(new Tile((float)tileWidthLoc, (float)tileHeightLoc, (float)TILE_WIDTH, (float)TILE_HEIGHT, (int) Math.ceil(Math.random()*3), graphics));
-				//tileList.add(new Rectangle((float)tileWidthLoc, (float)tileHeightLoc, (float)TILE_WIDTH, (float)TILE_HEIGHT));
 				tileWidthLoc += TILE_WIDTH;
 			}
 			tileHeightLoc += TILE_HEIGHT;
@@ -143,13 +161,26 @@ public class SlickGame extends BasicGame {
 		ArrayList <Tile> toRemove = new ArrayList<>();
 		
 		for(Tile t : tileList){
-			if(t.intersects(ball)){
+			float [] dimensions = t.getRect();
+			if(ball.intersects(new Line(dimensions[0], dimensions[1], dimensions[0]
+													+ dimensions[2], dimensions[1]))
+			|| ball.intersects(new Line(dimensions[0], dimensions[1] + dimensions[3],
+					dimensions[0] + dimensions[2], dimensions[1] + dimensions[3]))){
 				ball.getBallVelocity().y = -ball.getBallVelocity().getY();
 				if(t.wasShot() == 0){
 					toRemove.add(t);
-					System.out.println("pitasTuhoutua");
-				}				
+				}	
 			}
+			
+			else if(ball.intersects(new Line(dimensions[0] + dimensions[2], dimensions[1],
+							dimensions[0] + dimensions[2], dimensions[1] + dimensions[3]))
+					|| ball.intersects(new Line(dimensions[0], dimensions[1], dimensions[0],
+														dimensions[1] + dimensions[3]))){
+						ball.getBallVelocity().x = -ball.getBallVelocity().getX();
+						if(t.wasShot() == 0){
+							toRemove.add(t);
+						}	
+					}
 		}
 		
 		for(Tile t : toRemove){
