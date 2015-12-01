@@ -72,18 +72,17 @@ public class WorkerRunnable implements Runnable {
 
 	}
 	private void updateControlLocation(String message) {
-		Double angle = Double.parseDouble(message);
 		Vector2f currLocation;
 		if(gameControl.getSlickGame().getRacket() != null) {
 			currLocation = gameControl.getSlickGame().getRacket().getLocation();
 			
-			if(angle > 0.3 && currLocation.x < width -80) {
+			if(message.equals("fastRight") && currLocation.x < width -80) {
 				gameControl.getSlickGame().getRacket().setLocation(currLocation.x + 4, currLocation.y);
-			} else if(angle < 0.3 && angle > 0 && currLocation.x < width -80) {
+			} else if(message.equals("slowRight") && currLocation.x < width -80) {
 				gameControl.getSlickGame().getRacket().setLocation(currLocation.x + 2, currLocation.y);
-			} else if(angle < -0.3 && currLocation.x > 0) {
+			} else if(message.equals("fastLeft") && currLocation.x > 0) {
 				gameControl.getSlickGame().getRacket().setLocation(currLocation.x - 4, currLocation.y);
-			} else if(angle > -0.3 && angle < 0 && currLocation.x > 0) {
+			} else if(message.equals("slowLeft") && currLocation.x > 0) {
 				gameControl.getSlickGame().getRacket().setLocation(currLocation.x - 2, currLocation.y);
 			}
 		}	
