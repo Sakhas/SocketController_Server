@@ -10,7 +10,7 @@ import org.newdawn.slick.SlickException;
 
 import pt.novaims.game.application.GameControl;
 import pt.novaims.game.model.SlickGame;
-import pt.novaims.server.model.SocketServer;
+import pt.novaims.server.model.PlayerControl;
 
 public class ServerMain {
 
@@ -26,9 +26,9 @@ public class ServerMain {
 		GameControl gameControl = new GameControl();
 		new Thread(gameControl).start();
 		
-		SocketServer server;
+		PlayerControl server;
 		try {
-			server = new SocketServer(SERVER_PORT, gameControl);
+			server = new PlayerControl(SERVER_PORT, gameControl);
 			new Thread(server).start();
 			System.out.println("Server started");
 					

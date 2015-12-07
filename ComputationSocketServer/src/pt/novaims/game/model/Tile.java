@@ -30,7 +30,7 @@ public class Tile extends Rectangle{
 			shotsToDestroy--;
 			this.updateColor();
 		}
-		System.out.println("shotsLeft: " + shotsToDestroy);
+		//System.out.println("shotsLeft: " + shotsToDestroy);
 		return shotsToDestroy;
 	}
 	

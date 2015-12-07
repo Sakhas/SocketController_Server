@@ -16,9 +16,11 @@ public class Player implements Runnable {
     protected String serverText   = null;
     protected GameControl gameControl;
     protected int width;
-
-    public Player(Socket clientSocket, String serverText, GameControl gameControl) {
-        this.clientSocket = clientSocket;
+    private PlayerControl playerControl;
+    
+    public Player(PlayerControl playerControl, Socket clientSocket, String serverText, GameControl gameControl) {
+        this.playerControl = playerControl;
+    	this.clientSocket = clientSocket;
         this.serverText   = serverText;
         this.gameControl = gameControl;
         this.width = gameControl.getApp().getWidth();
@@ -30,12 +32,13 @@ public class Player implements Runnable {
         	InputStream input  = clientSocket.getInputStream();
             OutputStream output = clientSocket.getOutputStream();
             String inputMessage = getStringFromInputStream(input);
-            System.err.println("WorkerRunnable Run-method, message: " + inputMessage);      
+            System.err.println("Player class, message: " + inputMessage);      
         	
         	long time = System.currentTimeMillis();
             output.close();
             input.close();
-            System.out.println("Request processed: " + time);
+            System.out.println(serverText + " request processed: " + time);
+            playerControl.setPlayerCount(playerControl.getPlayerCount() - 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,14 +48,14 @@ public class Player implements Runnable {
 
 		BufferedReader br = null;
 		StringBuilder sb = new StringBuilder();
+		sb.append(serverText + ". left the game.");
 
 		String line;
 		try {
 
 			br = new BufferedReader(new InputStreamReader(is));
 			while ((line = br.readLine()) != null) {
-				sb.append(line);
-				System.out.println(line);
+				System.out.println(serverText + ". controller data:" + line);
 				updateControlLocation(line);
 			}
 
