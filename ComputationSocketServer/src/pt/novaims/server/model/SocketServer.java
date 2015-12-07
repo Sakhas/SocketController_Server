@@ -40,7 +40,7 @@ public class SocketServer implements Runnable {
                 throw new RuntimeException(
                     "Error accepting client connection", e);
             }
-            new Thread(new WorkerRunnable(clientSocket, "Computation Server", game)).start();
+            new Thread(new Player(clientSocket, "Computation Server", game)).start();
             System.out.println("Started new Multithread server");
         }
         

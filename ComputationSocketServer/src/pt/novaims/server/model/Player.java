@@ -10,14 +10,14 @@ import java.net.Socket;
 import org.newdawn.slick.geom.Vector2f;
 import pt.novaims.game.application.GameControl;
 
-public class WorkerRunnable implements Runnable {
+public class Player implements Runnable {
 	
     protected Socket clientSocket = null;
     protected String serverText   = null;
     protected GameControl gameControl;
     protected int width;
 
-    public WorkerRunnable(Socket clientSocket, String serverText, GameControl gameControl) {
+    public Player(Socket clientSocket, String serverText, GameControl gameControl) {
         this.clientSocket = clientSocket;
         this.serverText   = serverText;
         this.gameControl = gameControl;
