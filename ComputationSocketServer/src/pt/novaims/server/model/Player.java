@@ -7,8 +7,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.RoundedRectangle;
 import org.newdawn.slick.geom.Vector2f;
+
 import pt.novaims.game.application.GameControl;
+import pt.novaims.game.util.GameInfo;
 
 public class Player implements Runnable {
 	
@@ -17,14 +21,23 @@ public class Player implements Runnable {
     protected GameControl gameControl;
     protected int width;
     private PlayerControl playerControl;
+    private Rectangle racket;
     
-    public Player(PlayerControl playerControl, Socket clientSocket, String serverText, GameControl gameControl) {
+    public Rectangle getRacket() {
+		return racket;
+	}
+
+	public void setRacket(Rectangle racket) {
+		this.racket = racket;
+	}
+
+	public Player(PlayerControl playerControl, Socket clientSocket, String serverText, GameControl gameControl) {
         this.playerControl = playerControl;
     	this.clientSocket = clientSocket;
         this.serverText   = serverText;
         this.gameControl = gameControl;
         this.width = gameControl.getApp().getWidth();
-        System.out.println(width);
+        this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_WIDTH, 3);
     }
 
     public void run() {
@@ -32,7 +45,7 @@ public class Player implements Runnable {
         	InputStream input  = clientSocket.getInputStream();
             OutputStream output = clientSocket.getOutputStream();
             String inputMessage = getStringFromInputStream(input);
-            System.err.println("Player class, message: " + inputMessage);      
+            System.err.println(serverText + " message: " + inputMessage);      
         	
         	long time = System.currentTimeMillis();
             output.close();

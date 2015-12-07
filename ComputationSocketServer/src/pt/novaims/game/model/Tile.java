@@ -6,6 +6,7 @@ import org.newdawn.slick.geom.Rectangle;
 
 public class Tile extends Rectangle{
 	
+	private static final long serialVersionUID = 1L;
 	private int shotsToDestroy;
 	private Graphics graphics;
 	private Color currentColor;
