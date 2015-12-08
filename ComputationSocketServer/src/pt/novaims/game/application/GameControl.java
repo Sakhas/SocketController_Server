@@ -7,6 +7,7 @@ import pt.novaims.game.model.SlickGame;
 
 public class GameControl implements Runnable {
 
+	//u wot m8
 	private SlickGame slickGame;
 	private AppGameContainer app;
 	
