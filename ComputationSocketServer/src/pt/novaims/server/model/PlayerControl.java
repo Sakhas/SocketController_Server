@@ -14,8 +14,26 @@ public class PlayerControl implements Runnable {
     protected Thread       runningThread= null;
     private int playerCount = 0;
     private GameControl game;
+    private Player player1;
+    private Player player2;
     
-    public int getPlayerCount() {
+    public Player getPlayer1() {
+		return player1;
+	}
+
+	public void setPlayer1(Player player1) {
+		this.player1 = player1;
+	}
+
+	public Player getPlayer2() {
+		return player2;
+	}
+
+	public void setPlayer2(Player player2) {
+		this.player2 = player2;
+	}
+
+	public int getPlayerCount() {
 		return playerCount;
 	}
 
@@ -45,7 +63,18 @@ public class PlayerControl implements Runnable {
         while(! isStopped()){
             Socket clientSocket = null;
             try {
-                clientSocket = this.serverSocket.accept();
+            	if(playerCount < 2) {
+            		clientSocket = this.serverSocket.accept();
+            		playerCount++;
+            		Player player = new Player(this, clientSocket, playerCount, game);
+            		new Thread(player).start();
+            		if(playerCount == 1) {
+            			player1 = player;
+            		} else if(playerCount == 2) {
+            			player2 = player;
+            		}
+                    System.out.println("Player " + playerCount +". Connected");
+            	}
             } catch (IOException e) {
                 if(isStopped()) {
                     System.out.println("Server Stopped.") ;
@@ -53,10 +82,7 @@ public class PlayerControl implements Runnable {
                 }
                 throw new RuntimeException(
                     "Error accepting client connection", e);
-            }
-            playerCount++;
-            new Thread(new Player(this, clientSocket, "Player " + playerCount, game)).start();
-            System.out.println("Player " + playerCount +". Connected");
+            }     
         }
         
         System.out.println("Server Stopped.");
@@ -83,6 +109,25 @@ public class PlayerControl implements Runnable {
         }
     }
 
+    public void playerDisconnected(Player player) {
+    	//Pause multiplayer game
+    	System.out.println("Player " + player.getPlayerNumber() + ". disconnected!");
+    	
+    	if(!game.isGameRunning()) {
+    		
+    		if(player.getPlayerNumber() == 1 && playerCount == 2) {
+    			player1 = player2;
+    			player1.setPlayerNumber(1);
+    			player2 = null;
+    		} else if (player.getPlayerNumber() == 2) {
+    			player2 = null;
+    		} else if(player.getPlayerNumber() == 1 && playerCount == 1) {
+    			player1 = null;
+    		}
+    		
+    		playerCount--;	
+    	}
+    }
 
 
 }

@@ -9,7 +9,7 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 
 import pt.novaims.game.application.GameControl;
-import pt.novaims.game.model.SlickGame;
+import pt.novaims.game.model.SingleplayerGame;
 import pt.novaims.server.model.PlayerControl;
 
 public class ServerMain {
@@ -19,17 +19,20 @@ public class ServerMain {
 	final static int SERVER_PORT = 8888;
 	final static int SOCKET_PORT = 8888;
 	
-	static SlickGame slickGame;
+	static SingleplayerGame slickGame;
 	
 	public static void main(String[] args) {
-				
-		GameControl gameControl = new GameControl();
-		new Thread(gameControl).start();
 		
-		PlayerControl server;
+		PlayerControl playerControl;
+		
 		try {
-			server = new PlayerControl(SERVER_PORT, gameControl);
-			new Thread(server).start();
+			GameControl gameControl = null;
+			playerControl = new PlayerControl(SERVER_PORT, gameControl);
+			gameControl = new GameControl("SlickGame", playerControl);
+			playerControl.setGame(gameControl);
+			
+			new Thread(gameControl).start();	
+			new Thread(playerControl).start();
 			System.out.println("Server started");
 					
 			DatagramSocket serverSocket = new DatagramSocket(SOCKET_PORT, InetAddress.getByName("0.0.0.0")); 
@@ -46,7 +49,6 @@ public class ServerMain {
 				
 				if(receivedData.equals(KEYWORD)) {
 					System.out.println("Contact made with client\n Client Address: " + receivePacket.getAddress());
-					System.out.println("ok");
 		            InetAddress IPAddress = receivePacket.getAddress();
 		            	            
 		            String sendString = KEYWORD_RESPONSE;
@@ -69,27 +71,6 @@ public class ServerMain {
 		}
 		/*System.out.println("Stopping Server");
 		server.stop();*/
-	}
-	
-	public static void startGame() {
-		
-		slickGame = new SlickGame("SlickGame");
-		AppGameContainer app;
-		
-		try {
-			app = new AppGameContainer(slickGame);
-			app.setDisplayMode(800, 600, false);
-			
-			app.setTitle("Slick game");
-			app.start();
-			
-		} catch (SlickException e) {
-			System.err.println("Error occured in the game: ");
-			e.printStackTrace();
-		}
-		
-		
-		
 	}
 	
 	public static String getIpFromAddress(String address) {

@@ -17,13 +17,24 @@ import pt.novaims.game.util.GameInfo;
 public class Player implements Runnable {
 	
     protected Socket clientSocket = null;
-    protected String serverText   = null;
+    protected String playerOutput   = null;
     protected GameControl gameControl;
     protected int width;
     private PlayerControl playerControl;
     private Rectangle racket;
+    private String ip;
+    private int playerNumber;
     
-    public Rectangle getRacket() {
+    
+    public int getPlayerNumber() {
+		return playerNumber;
+	}
+
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNumber = playerNumber;
+	}
+
+	public Rectangle getRacket() {
 		return racket;
 	}
 
@@ -31,13 +42,14 @@ public class Player implements Runnable {
 		this.racket = racket;
 	}
 
-	public Player(PlayerControl playerControl, Socket clientSocket, String serverText, GameControl gameControl) {
+	public Player(PlayerControl playerControl, Socket clientSocket, int playerNumber, GameControl gameControl) {
         this.playerControl = playerControl;
     	this.clientSocket = clientSocket;
-        this.serverText   = serverText;
+        this.playerNumber = playerNumber;
+        this.ip = clientSocket.getInetAddress().toString();
         this.gameControl = gameControl;
-        this.width = gameControl.getApp().getWidth();
-        this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_WIDTH, 3);
+        this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+        this.playerOutput = "Player " + Integer.toString(playerNumber) + ". ";
     }
 
     public void run() {
@@ -45,13 +57,13 @@ public class Player implements Runnable {
         	InputStream input  = clientSocket.getInputStream();
             OutputStream output = clientSocket.getOutputStream();
             String inputMessage = getStringFromInputStream(input);
-            System.err.println(serverText + " message: " + inputMessage);      
+            System.err.println(playerOutput + " message: " + inputMessage);      
         	
         	long time = System.currentTimeMillis();
             output.close();
             input.close();
-            System.out.println(serverText + " request processed: " + time);
-            playerControl.setPlayerCount(playerControl.getPlayerCount() - 1);
+            System.out.println(playerOutput + " request processed: " + time);
+            playerControl.playerDisconnected(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,14 +73,14 @@ public class Player implements Runnable {
 
 		BufferedReader br = null;
 		StringBuilder sb = new StringBuilder();
-		sb.append(serverText + ". left the game.");
+		sb.append(playerOutput + ". left the game.");
 
 		String line;
 		try {
 
 			br = new BufferedReader(new InputStreamReader(is));
 			while ((line = br.readLine()) != null) {
-				System.out.println(serverText + ". controller data:" + line);
+				System.out.println(playerOutput + "controller data:" + line);
 				updateControlLocation(line);
 			}
 
@@ -89,18 +101,22 @@ public class Player implements Runnable {
 	}
 	private void updateControlLocation(String message) {
 		Vector2f currLocation;
-		if(gameControl.getSlickGame().getRacket() != null) {
-			currLocation = gameControl.getSlickGame().getRacket().getLocation();
+		if(gameControl.isGameRunning()) {
+			currLocation = racket.getLocation();
 			
-			if(message.equals("fastRight") && currLocation.x < width -80) {
-				gameControl.getSlickGame().getRacket().setLocation(currLocation.x + 4, currLocation.y);
-			} else if(message.equals("slowRight") && currLocation.x < width -80) {
-				gameControl.getSlickGame().getRacket().setLocation(currLocation.x + 2, currLocation.y);
+			if(message.equals("fastRight") && currLocation.x < GameInfo.WIDTH -80) {
+				racket.setLocation(currLocation.x + 4, currLocation.y);
+			} else if(message.equals("slowRight") && currLocation.x < GameInfo.WIDTH -80) {
+				racket.setLocation(currLocation.x + 2, currLocation.y);
 			} else if(message.equals("fastLeft") && currLocation.x > 0) {
-				gameControl.getSlickGame().getRacket().setLocation(currLocation.x - 4, currLocation.y);
+				racket.setLocation(currLocation.x - 4, currLocation.y);
 			} else if(message.equals("slowLeft") && currLocation.x > 0) {
-				gameControl.getSlickGame().getRacket().setLocation(currLocation.x - 2, currLocation.y);
+				racket.setLocation(currLocation.x - 2, currLocation.y);
 			}
 		}	
+	}
+	
+	public void resetRacket() {
+		this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
 	}
 }

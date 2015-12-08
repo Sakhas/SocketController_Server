@@ -2,22 +2,23 @@ package pt.novaims.game.model;
 
 import java.util.ArrayList;
 
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.RoundedRectangle;
 import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 
 import pt.novaims.game.util.GameInfo;
+import pt.novaims.server.model.Player;
 
-public class SlickGame extends BasicGame {
+public class SingleplayerGame extends BasicGameState {
 
-	private Music backgroundMusic;
+	private Player player;
 	private Rectangle racket;
 	private Ball ball;
 	private int missCount = 0;
@@ -25,18 +26,20 @@ public class SlickGame extends BasicGame {
 	private boolean ballMissed = false;
 	private boolean gameOver = false;
 	private ArrayList<Tile> tileList;
+	private int id;
 	
-	public SlickGame(String title) {
-		super(title);
+	public SingleplayerGame(int id, Player player) {
+		this.id = id;
+		this.player = player;
+		this.racket = player.getRacket();
 	}
 	
 	@Override
-	public void render(GameContainer container, Graphics graphics) throws SlickException {
+	public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
 		graphics.setBackground(Color.gray);
-		graphics.setColor(new Color(0, 0, 0));//inside color
+		graphics.setColor(new Color(0, 0, 0));
 	    graphics.fill(racket);
 	    graphics.fill(ball);
-	   // graphics.setColor(new Color(255, 0, 0));//red, green, blue OUTLINE of circle
 	    graphics.draw(racket);
 	    graphics.drawString("Welcome to SlickGame", 300, 20);
 	    graphics.drawString("Balls left: " + Integer.toString(ballsLeft), GameInfo.WIDTH - 200, 50);
@@ -49,7 +52,7 @@ public class SlickGame extends BasicGame {
 	    	missCount++;
 	    	if(ballsLeft == 0){
 	    		ballsLeft = 3;
-	    		this.init(container);
+	    		this.init(container, stateBasedGame);
 	    	}
 	    	else {
 	    		this.tryAgain(container);
@@ -59,12 +62,8 @@ public class SlickGame extends BasicGame {
 	}
 
 	@Override
-	public void init(GameContainer container) throws SlickException {
-		backgroundMusic = new Music("res/sounds/background1.ogg");
-		backgroundMusic.setVolume(10);
-		backgroundMusic.play();
-		racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_WIDTH, 3);
-				
+	public void init(GameContainer container, StateBasedGame stateBasedGame) throws SlickException {
+		racket = player.getRacket();				
 		ball = new Ball((int) Math.ceil(Math.random()* GameInfo.WIDTH), GameInfo.TILE_HEIGHT*GameInfo.ARRAY_ROWS + GameInfo.TILE_HEIGHT_LOC + 20, 6);
 		org.newdawn.slick.geom.Vector2f ballVelocityVector = new org.newdawn.slick.geom.Vector2f();
 		ballVelocityVector.x = (float) GameInfo.ballVelocity;
@@ -74,8 +73,9 @@ public class SlickGame extends BasicGame {
 		
 	}
 	
-	public void tryAgain(GameContainer container) throws SlickException{
-		racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+	public void tryAgain(GameContainer container) throws SlickException {
+		player.resetRacket();
+		racket = player.getRacket();
 				
 		ball = new Ball((int) Math.ceil(Math.random()*GameInfo.WIDTH), GameInfo.TILE_HEIGHT*GameInfo.ARRAY_ROWS + GameInfo.TILE_HEIGHT_LOC + 20, 6);
 		org.newdawn.slick.geom.Vector2f ballVelocityVector = new org.newdawn.slick.geom.Vector2f();
@@ -85,8 +85,11 @@ public class SlickGame extends BasicGame {
 	}
 
 	@Override
-	public void update(GameContainer container, int delta) throws SlickException {
+	public void update(GameContainer container, StateBasedGame stateBasedGame, int delta) throws SlickException {
 
+		racket = player.getRacket();
+		System.out.println(racket.getLocation().x + " " + racket.getLocation().y);
+		
 		ball.setLocation(ball.getX() + ball.getBallVelocity().getX(), ball.getY() + ball.getBallVelocity().getY());
 		
 		if (ball.getMinX() <= 0) {
@@ -184,6 +187,11 @@ public class SlickGame extends BasicGame {
 	
 	public void setRacket(Rectangle racket) {
 		this.racket = racket;
+	}
+
+	@Override
+	public int getID() {
+		return this.id;
 	}
 
 }
