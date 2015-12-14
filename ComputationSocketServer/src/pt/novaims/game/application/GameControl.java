@@ -70,7 +70,7 @@ public class GameControl extends StateBasedGame implements Runnable {
 	public void initStatesList(GameContainer arg0) throws SlickException {
 		this.addState(new Menu(MENU, playerControl, this));
 		//this.addState(new SingleplayerGame(SINGLE, playerControl.getPlayer1()));
-		this.addState(new MultiplayerGame(MULTI));
+		//this.addState(new MultiplayerGame(MULTI, playerControl.getPlayer1(), playerControl.getPlayer2()));
 		
 	}
 

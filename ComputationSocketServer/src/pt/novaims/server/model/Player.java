@@ -24,6 +24,8 @@ public class Player implements Runnable {
     private Rectangle racket;
     private String ip;
     private int playerNumber;
+    private int ballsLeft = 3;
+	private boolean ballMissed = false;
     
     
     public int getPlayerNumber() {
@@ -48,7 +50,10 @@ public class Player implements Runnable {
         this.playerNumber = playerNumber;
         this.ip = clientSocket.getInetAddress().toString();
         this.gameControl = gameControl;
-        this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+        if(playerNumber == 1)
+        	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+        else
+        	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 50, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
         this.playerOutput = "Player " + Integer.toString(playerNumber) + ". ";
     }
 
@@ -117,6 +122,30 @@ public class Player implements Runnable {
 	}
 	
 	public void resetRacket() {
-		this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+		if(playerNumber == 1)
+        	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+        else
+        	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 50, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+	}
+	
+	public void ballMissed(){
+		ballMissed = true;
+	}
+	
+	public boolean didMissBall(){
+		return ballMissed;
+	}
+	
+	public void updateBallCount(){
+		ballMissed = false;
+		ballsLeft--;
+	}
+	
+	public int getBallsLeft(){
+		return ballsLeft;
+	}
+	
+	public void resetBallsLeft(){
+		ballsLeft = 3;
 	}
 }

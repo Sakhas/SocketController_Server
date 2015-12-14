@@ -58,6 +58,13 @@ public class Menu extends BasicGameState {
 			sbg.addState(singleGame);
 			sbg.enterState(2);
 		}
+		else if (playerCount > 1 && container.getInput().isKeyPressed(Input.KEY_2)) {
+			gameControl.setGameRunning(true);
+			MultiplayerGame multiGame = new MultiplayerGame(3, playerControl.getPlayer1(), playerControl.getPlayer2());
+			multiGame.init(container, sbg);
+			sbg.addState(multiGame);
+			sbg.enterState(3);
+		}
 	}
 
 	@Override

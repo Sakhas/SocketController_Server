@@ -35,6 +35,17 @@ public class SingleplayerGame extends BasicGameState {
 	}
 	
 	@Override
+	public void init(GameContainer container, StateBasedGame stateBasedGame) throws SlickException {
+		racket = player.getRacket();				
+		ball = new Ball((int) Math.ceil(Math.random()* GameInfo.WIDTH), GameInfo.TILE_HEIGHT*GameInfo.ARRAY_ROWS + GameInfo.TILE_HEIGHT_LOC + 20, 6);
+		org.newdawn.slick.geom.Vector2f ballVelocityVector = new org.newdawn.slick.geom.Vector2f();
+		ballVelocityVector.x = (float) GameInfo.ballVelocity;
+		ballVelocityVector.y = (float) GameInfo.ballVelocity;
+		ball.setBallVelocity(ballVelocityVector);
+		initTileArray(container.getGraphics());
+	}
+	
+	@Override
 	public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
 		graphics.setBackground(Color.gray);
 		graphics.setColor(new Color(0, 0, 0));
@@ -59,18 +70,6 @@ public class SingleplayerGame extends BasicGameState {
 	    	}
 	    }	
 					
-	}
-
-	@Override
-	public void init(GameContainer container, StateBasedGame stateBasedGame) throws SlickException {
-		racket = player.getRacket();				
-		ball = new Ball((int) Math.ceil(Math.random()* GameInfo.WIDTH), GameInfo.TILE_HEIGHT*GameInfo.ARRAY_ROWS + GameInfo.TILE_HEIGHT_LOC + 20, 6);
-		org.newdawn.slick.geom.Vector2f ballVelocityVector = new org.newdawn.slick.geom.Vector2f();
-		ballVelocityVector.x = (float) GameInfo.ballVelocity;
-		ballVelocityVector.y = (float) GameInfo.ballVelocity;
-		ball.setBallVelocity(ballVelocityVector);
-		initTileArray(container.getGraphics());
-		
 	}
 	
 	public void tryAgain(GameContainer container) throws SlickException {
