@@ -16,7 +16,7 @@ import pt.novaims.game.util.GameInfo;
 
 public class Player implements Runnable {
 	
-    protected Socket clientSocket = null;
+    private Socket clientSocket = null;
     protected String playerOutput   = null;
     protected GameControl gameControl;
     protected int width;
@@ -25,10 +25,23 @@ public class Player implements Runnable {
     private String ip;
     private int playerNumber;
     private int ballsLeft = 3;
-	private boolean ballMissed = false;
-    
-    
-    public int getPlayerNumber() {
+	private boolean ballMissed = false;	
+    private boolean disconnected;
+	
+	
+    public Socket getClientSocket() {
+		return clientSocket;
+	}
+
+	public void setClientSocket(Socket clientSocket) {
+		this.clientSocket = clientSocket;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public int getPlayerNumber() {
 		return playerNumber;
 	}
 
@@ -50,25 +63,34 @@ public class Player implements Runnable {
         this.playerNumber = playerNumber;
         this.ip = clientSocket.getInetAddress().toString();
         this.gameControl = gameControl;
-        if(playerNumber == 1)
+        this.disconnected = false;
+        
+        if(playerNumber == 1) {
         	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
-        else
+        } else {
         	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 50, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+        }
+        
         this.playerOutput = "Player " + Integer.toString(playerNumber) + ". ";
     }
 
     public void run() {
         try {     	
+        	if(disconnected) {
+        		playerControl.playerResumedGameAfterDisconnection(this);
+        		disconnected = false;
+        	}
         	InputStream input  = clientSocket.getInputStream();
             OutputStream output = clientSocket.getOutputStream();
             String inputMessage = getStringFromInputStream(input);
-            System.err.println(playerOutput + " message: " + inputMessage);      
+            //System.err.println(playerOutput + " message: " + inputMessage);      
         	
         	long time = System.currentTimeMillis();
             output.close();
             input.close();
             System.out.println(playerOutput + " request processed: " + time);
             playerControl.playerDisconnected(this);
+            disconnected = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,7 +107,7 @@ public class Player implements Runnable {
 
 			br = new BufferedReader(new InputStreamReader(is));
 			while ((line = br.readLine()) != null) {
-				System.out.println(playerOutput + "controller data:" + line);
+				//System.out.println(playerOutput + "controller data:" + line);
 				updateControlLocation(line);
 			}
 

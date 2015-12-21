@@ -26,6 +26,7 @@ public class Menu extends BasicGameState {
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame sbg) throws SlickException {
+		gameControl.setGameRunning(false);
 		/*singleText = new TextField(container, container.getDefaultFont(), 150, 100, 200, 30);
 		multiplayerText = new TextField(container, container.getDefaultFont(), 150, 100, 200, 30);
 		singleText.setText("1. Single player");
@@ -55,6 +56,7 @@ public class Menu extends BasicGameState {
 			gameControl.setGameRunning(true);
 			SingleplayerGame singleGame = new SingleplayerGame(2, playerControl.getPlayer1());
 			singleGame.init(container, sbg);
+			gameControl.setSinglePlayerGame(singleGame);
 			sbg.addState(singleGame);
 			sbg.enterState(2);
 		}
@@ -62,6 +64,7 @@ public class Menu extends BasicGameState {
 			gameControl.setGameRunning(true);
 			MultiplayerGame multiGame = new MultiplayerGame(3, playerControl.getPlayer1(), playerControl.getPlayer2());
 			multiGame.init(container, sbg);
+			gameControl.setMultiplayerGame(multiGame);
 			sbg.addState(multiGame);
 			sbg.enterState(3);
 		}

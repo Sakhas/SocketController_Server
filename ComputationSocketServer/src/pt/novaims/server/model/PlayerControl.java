@@ -63,8 +63,10 @@ public class PlayerControl implements Runnable {
         while(! isStopped()){
             Socket clientSocket = null;
             try {
-            	if(playerCount < 2) {
+            	System.out.println("TCP socket connection started");
+            	if(!game.isGameRunning() && playerCount < 2) {
             		clientSocket = this.serverSocket.accept();
+            		
             		playerCount++;
             		Player player = new Player(this, clientSocket, playerCount, game);
             		new Thread(player).start();
@@ -73,7 +75,24 @@ public class PlayerControl implements Runnable {
             		} else if(playerCount == 2) {
             			player2 = player;
             		}
-                    System.out.println("Player " + playerCount +". Connected");
+            		System.out.println("Player " + playerCount +". Connected");
+        		
+            		
+                    
+            	} else if (game.isGameRunning()) {
+            		
+            		clientSocket = this.serverSocket.accept();
+            		System.out.println("Player1 IP: " + player1.getIp()  + "Player connecting: " + this.serverSocket.getInetAddress().toString());
+            		if(player1 != null && player1.getIp().equals(this.serverSocket.getInetAddress().toString())) {
+            			player1.setClientSocket(clientSocket);
+            			System.out.println("Player " + playerCount +". reconnected");
+            			new Thread(player1).start();
+            		} else if(player2 != null && player2.getIp().equals(this.serverSocket.getInetAddress().toString())) {
+            			player2.setClientSocket(clientSocket);
+            			System.out.println("Player " + playerCount +". reconnected");
+            			new Thread(player2).start();
+            		}
+            		
             	}
             } catch (IOException e) {
                 if(isStopped()) {
@@ -110,7 +129,6 @@ public class PlayerControl implements Runnable {
     }
 
     public void playerDisconnected(Player player) {
-    	//Pause multiplayer game
     	System.out.println("Player " + player.getPlayerNumber() + ". disconnected!");
     	
     	if(!game.isGameRunning()) {
@@ -124,10 +142,16 @@ public class PlayerControl implements Runnable {
     		} else if(player.getPlayerNumber() == 1 && playerCount == 1) {
     			player1 = null;
     		}
-    		
     		playerCount--;	
+    	} else {
+    		game.pauseActiveGameDueDisconnection(player);
     	}
     }
+    
+    public void playerResumedGameAfterDisconnection(Player player) {
+    	System.out.println("Player " + player.getPlayerNumber() + ". resumed game!");
+    	game.playerConnectedBackToGame(player);
+	}
 
 
 }

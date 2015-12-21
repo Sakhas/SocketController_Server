@@ -7,39 +7,50 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import pt.novaims.game.model.Menu;
 import pt.novaims.game.model.MultiplayerGame;
+import pt.novaims.game.model.PauseState;
 import pt.novaims.game.model.SingleplayerGame;
 import pt.novaims.game.util.GameInfo;
+import pt.novaims.server.model.Player;
 import pt.novaims.server.model.PlayerControl;
 
 public class GameControl extends StateBasedGame implements Runnable {
 
 	//State IDs
-	private static final int MENU = 1;
-	private static final int SINGLE = 2;
-	private static final int MULTI = 3;
+	public static final int MENU = 1;
+	public static final int SINGLE = 2;
+	public static final int MULTI = 3;
 	
-	private SingleplayerGame slickGame;
+	private SingleplayerGame singlePlayerGame;
 	private MultiplayerGame multiplayerGame;
+	private PauseState pauseState;
 	private AppGameContainer app;
 	private PlayerControl playerControl;
 	private Menu menu;
 	private boolean gameRunning;
+	private boolean gamePaused = false;
 	
-	
+	public SingleplayerGame getSinglePlayerGame() {
+		return singlePlayerGame;
+	}
+
+	public void setSinglePlayerGame(SingleplayerGame singlePlayerGame) {
+		this.singlePlayerGame = singlePlayerGame;
+	}
+
+	public MultiplayerGame getMultiplayerGame() {
+		return multiplayerGame;
+	}
+
+	public void setMultiplayerGame(MultiplayerGame multiplayerGame) {
+		this.multiplayerGame = multiplayerGame;
+	}
+
 	public boolean isGameRunning() {
 		return gameRunning;
 	}
 
 	public void setGameRunning(boolean gameRunning) {
 		this.gameRunning = gameRunning;
-	}
-
-	public SingleplayerGame getSlickGame() {
-		return slickGame;
-	}
-
-	public void setSlickGame(SingleplayerGame slickGame) {
-		this.slickGame = slickGame;
 	}
 		
 	public AppGameContainer getApp() {
@@ -73,5 +84,30 @@ public class GameControl extends StateBasedGame implements Runnable {
 		//this.addState(new MultiplayerGame(MULTI, playerControl.getPlayer1(), playerControl.getPlayer2()));
 		
 	}
+	
+	public void pauseActiveGameDueDisconnection(Player playerDisconnected) {
+		if(!gamePaused) {
+			int stateId = this.getCurrentStateID();
+			if (stateId == 2) {
+				pauseState = new PauseState(this.getCurrentState(), playerDisconnected);
+				this.addState(pauseState);
+			} else if(stateId == 3) {
+				pauseState = new PauseState(this.getCurrentState(), playerDisconnected);
+				this.addState(pauseState);
+			}
+			gamePaused = true;
+			this.enterState(4);
+		} else if (gamePaused && multiplayerGame != null) {
+			pauseState.otherPlayerDisconnected(playerDisconnected);
+		}
+	}
+	
+	public void playerConnectedBackToGame(Player connectedPlayer) {
+		if(gamePaused) {
+			pauseState.playerConnectedBackToGame(connectedPlayer);
+		}
+	}
+	
+	
 
 }
