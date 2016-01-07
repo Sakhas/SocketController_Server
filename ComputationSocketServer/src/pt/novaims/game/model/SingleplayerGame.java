@@ -87,7 +87,7 @@ public class SingleplayerGame extends BasicGameState {
 	public void update(GameContainer container, StateBasedGame stateBasedGame, int delta) throws SlickException {
 
 		racket = player.getRacket();
-		System.out.println(racket.getLocation().x + " " + racket.getLocation().y);
+		//System.out.println(racket.getLocation().x + " " + racket.getLocation().y);
 		
 		ball.setLocation(ball.getX() + ball.getBallVelocity().getX(), ball.getY() + ball.getBallVelocity().getY());
 		

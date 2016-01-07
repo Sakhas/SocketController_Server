@@ -64,36 +64,52 @@ public class PlayerControl implements Runnable {
             Socket clientSocket = null;
             try {
             	System.out.println("TCP socket connection started");
-            	if(!game.isGameRunning() && playerCount < 2) {
-            		clientSocket = this.serverSocket.accept();
-            		
-            		playerCount++;
-            		Player player = new Player(this, clientSocket, playerCount, game);
-            		new Thread(player).start();
-            		if(playerCount == 1) {
-            			player1 = player;
-            		} else if(playerCount == 2) {
-            			player2 = player;
+            	System.out.println("Game running:  " + game.isGameRunning());
+            	clientSocket = this.serverSocket.accept();
+            	if(playerCount < 2) {
+            		System.out.println("1. IF");
+            		if(!game.isGameRunning()) {
+	            		System.out.println("Adding new player");
+	            		playerCount++;
+	            		Player player = new Player(this, clientSocket, playerCount, game);
+	            		new Thread(player).start();
+	            		if(playerCount == 1) {
+	            			player1 = player;
+	            		} else if(playerCount == 2) {
+	            			player2 = player;
+	            		}
+	            		System.out.println("Player " + playerCount +". Connected");
+            		} else {
+            			System.out.println("2. IF");
+                		System.out.println("Player1 IP: " + player1.getIp()  + "Player connecting: " + clientSocket.getInetAddress().toString());
+                		if(player1 != null && player1.getIp().equals(clientSocket.getInetAddress().toString())) {
+                			player1.setClientSocket(clientSocket);
+                			System.out.println("Player " + playerCount +". reconnected");
+                			new Thread(player1).start();
+                		} else if(player2 != null && player2.getIp().equals(clientSocket.getInetAddress().toString())) {
+                			player2.setClientSocket(clientSocket);
+                			System.out.println("Player " + playerCount +". reconnected");
+                			new Thread(player2).start();
+                		}
             		}
-            		System.out.println("Player " + playerCount +". Connected");
         		
-            		
+            	}	
                     
-            	} else if (game.isGameRunning()) {
+            	/*} else if (game.isGameRunning()) {
             		
             		clientSocket = this.serverSocket.accept();
-            		System.out.println("Player1 IP: " + player1.getIp()  + "Player connecting: " + this.serverSocket.getInetAddress().toString());
-            		if(player1 != null && player1.getIp().equals(this.serverSocket.getInetAddress().toString())) {
+            		System.out.println("Player1 IP: " + player1.getIp()  + "Player connecting: " + clientSocket.getInetAddress().toString());
+            		if(player1 != null && player1.getIp().equals(clientSocket.getInetAddress().toString())) {
             			player1.setClientSocket(clientSocket);
             			System.out.println("Player " + playerCount +". reconnected");
             			new Thread(player1).start();
-            		} else if(player2 != null && player2.getIp().equals(this.serverSocket.getInetAddress().toString())) {
+            		} else if(player2 != null && player2.getIp().equals(clientSocket.getInetAddress().toString())) {
             			player2.setClientSocket(clientSocket);
             			System.out.println("Player " + playerCount +". reconnected");
             			new Thread(player2).start();
             		}
             		
-            	}
+            	}*/
             } catch (IOException e) {
                 if(isStopped()) {
                     System.out.println("Server Stopped.") ;

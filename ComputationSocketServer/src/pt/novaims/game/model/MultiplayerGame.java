@@ -88,9 +88,9 @@ public class MultiplayerGame extends BasicGameState {
 	public void update(GameContainer container, StateBasedGame stateBasedGame, int delta) throws SlickException {
 
 		p1Racket = player1.getRacket();
-		System.out.println(p1Racket.getLocation().x + " " + p1Racket.getLocation().y);
+		//System.out.println(p1Racket.getLocation().x + " " + p1Racket.getLocation().y);
 		p2Racket = player2.getRacket();
-		System.out.println(p2Racket.getLocation().x + " " + p2Racket.getLocation().y);
+		//System.out.println(p2Racket.getLocation().x + " " + p2Racket.getLocation().y);
 		
 		ball.setLocation(ball.getX() + ball.getBallVelocity().getX(), ball.getY() + ball.getBallVelocity().getY());
 		

@@ -57,6 +57,14 @@ public class GameControl extends StateBasedGame implements Runnable {
 		return app;
 	}
 
+	public boolean isGamePaused() {
+		return gamePaused;
+	}
+
+	public void setGamePaused(boolean gamePaused) {
+		this.gamePaused = gamePaused;
+	}
+
 	public GameControl(String name, PlayerControl playerControl) {
 		super(name);
 		this.playerControl = playerControl;
@@ -86,18 +94,19 @@ public class GameControl extends StateBasedGame implements Runnable {
 	}
 	
 	public void pauseActiveGameDueDisconnection(Player playerDisconnected) {
+		int stateId = this.getCurrentStateID();
 		if(!gamePaused) {
-			int stateId = this.getCurrentStateID();
+			
 			if (stateId == 2) {
-				pauseState = new PauseState(this.getCurrentState(), playerDisconnected);
+				pauseState = new PauseState(this.getCurrentState(), playerDisconnected, this, playerControl);
 				this.addState(pauseState);
 			} else if(stateId == 3) {
-				pauseState = new PauseState(this.getCurrentState(), playerDisconnected);
+				pauseState = new PauseState(this.getCurrentState(), playerDisconnected, this, playerControl);
 				this.addState(pauseState);
 			}
 			gamePaused = true;
 			this.enterState(4);
-		} else if (gamePaused && multiplayerGame != null) {
+		} else if (gamePaused && stateId == 3) {
 			pauseState.otherPlayerDisconnected(playerDisconnected);
 		}
 	}

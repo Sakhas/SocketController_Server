@@ -89,6 +89,7 @@ public class Player implements Runnable {
             output.close();
             input.close();
             System.out.println(playerOutput + " request processed: " + time);
+            this.clientSocket = null;
             playerControl.playerDisconnected(this);
             disconnected = true;
         } catch (IOException e) {

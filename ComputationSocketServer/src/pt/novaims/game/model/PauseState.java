@@ -8,12 +8,16 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.GameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import pt.novaims.game.application.GameControl;
 import pt.novaims.game.util.GameInfo;
 import pt.novaims.server.model.Player;
+import pt.novaims.server.model.PlayerControl;
 
 public class PauseState extends BasicGameState {
 
 	private GameState game;
+	private GameControl gameControl;
+	private PlayerControl playerControl;
 	private Player disconnectedPlayer1;
 	private Player disconnectedPlayer2;
 	private boolean playerReconnected = false;
@@ -26,8 +30,18 @@ public class PauseState extends BasicGameState {
 		this.playerReconnected = playerReconnected;
 	}
 
-	public PauseState(GameState game, Player disconnectedPlayer) {
+	public GameControl getGameControl() {
+		return gameControl;
+	}
+
+	public void setGameControl(GameControl gameControl) {
+		this.gameControl = gameControl;
+	}
+
+	public PauseState(GameState game, Player disconnectedPlayer, GameControl gameControl, PlayerControl playerControl) {
 		this.game = game;
+		this.gameControl = gameControl;
+		this.playerControl = playerControl;
 		this.disconnectedPlayer1 = disconnectedPlayer;
 	}
 	
@@ -58,8 +72,15 @@ public class PauseState extends BasicGameState {
 	@Override
 	public void update(GameContainer container, StateBasedGame sbg, int arg2) throws SlickException {
 		if(container.getInput().isKeyPressed(Input.KEY_1) && disconnectedPlayer1 == null && disconnectedPlayer2 == null) {
+			gameControl.setGamePaused(false);
 			sbg.enterState(game.getID());
+			
 		} else if(container.getInput().isKeyPressed(Input.KEY_2)) {
+			
+			playerControl.setPlayerCount(countActivePlayers());
+			
+			gameControl.setGamePaused(false);
+			gameControl.setGameRunning(false);
 			sbg.enterState(1);
 		}
 	}
@@ -80,6 +101,24 @@ public class PauseState extends BasicGameState {
 		}
 	}
 
+	public int countActivePlayers() {
+		int playersActive = 0;
+		if(game.getID() == 2) {
+			if(disconnectedPlayer1 == null) {
+				playersActive++;
+			}
+		} else if(game.getID() == 3) {
+			if(disconnectedPlayer1 == null) {
+				playersActive++;
+			}
+			if(disconnectedPlayer2 == null) {
+				playersActive++;
+			}
+		}
+		
+		return playersActive;
+	}
+	
 	@Override
 	public int getID() {
 		return 4;
