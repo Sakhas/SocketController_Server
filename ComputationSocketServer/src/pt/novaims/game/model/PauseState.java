@@ -77,18 +77,21 @@ public class PauseState extends BasicGameState {
 			
 		} else if(container.getInput().isKeyPressed(Input.KEY_2)) {
 			
-			playerControl.setPlayerCount(countActivePlayers());
+			//playerControl.setPlayerCount(countActivePlayers());
 			
 			gameControl.setGamePaused(false);
 			gameControl.setGameRunning(false);
+			playerControl.updatePlayerCount();
 			sbg.enterState(1);
 		}
 	}
 	
 	public void otherPlayerDisconnected(Player disconnectedPlayer) {
 		if(disconnectedPlayer1 == null) {
+			System.out.println("Player 1 null");
 			disconnectedPlayer1 = disconnectedPlayer;
 		} else {
+			System.out.println("player 2 null");
 			disconnectedPlayer2 = disconnectedPlayer;
 		}
 	}
@@ -96,7 +99,7 @@ public class PauseState extends BasicGameState {
 	public void playerConnectedBackToGame(Player connectedPlayer) {
 		if(disconnectedPlayer1 != null && disconnectedPlayer1.getIp().equals(connectedPlayer.getIp())){
 			disconnectedPlayer1 = null;
-		} else if(disconnectedPlayer2 != null && disconnectedPlayer1.getIp().equals(connectedPlayer.getIp())) {
+		} else if(disconnectedPlayer2 != null && disconnectedPlayer2.getIp().equals(connectedPlayer.getIp())) {
 			disconnectedPlayer2 = null;
 		}
 	}

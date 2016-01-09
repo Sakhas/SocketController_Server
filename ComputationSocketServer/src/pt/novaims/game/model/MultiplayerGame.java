@@ -29,12 +29,16 @@ public class MultiplayerGame extends BasicGameState {
 		this.id = id;
 		this.player1 = player1;
 		this.player2 = player2;
+		this.player1.setMultiplayerRacket();
+		this.player2.setMultiplayerRacket();
 		this.p1Racket = player1.getRacket();
 		this.p2Racket = player2.getRacket();
 	}
 
 	@Override
 	public void init(GameContainer container, StateBasedGame stateBasedGame) throws SlickException {
+		player1.setMultiplayerRacket();;
+		player2.setMultiplayerRacket();
 		p1Racket = player1.getRacket();
 		p2Racket = player2.getRacket();
 		ball = new Ball((int) Math.ceil(Math.random()* GameInfo.WIDTH), GameInfo.TILE_HEIGHT*GameInfo.ARRAY_ROWS + GameInfo.TILE_HEIGHT_LOC + 20, 6);

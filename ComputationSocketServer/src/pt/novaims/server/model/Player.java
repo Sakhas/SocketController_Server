@@ -29,7 +29,16 @@ public class Player implements Runnable {
     private boolean disconnected;
 	
 	
-    public Socket getClientSocket() {
+    
+    public boolean isDisconnected() {
+		return disconnected;
+	}
+
+	public void setDisconnected(boolean disconnected) {
+		this.disconnected = disconnected;
+	}
+
+	public Socket getClientSocket() {
 		return clientSocket;
 	}
 
@@ -65,11 +74,7 @@ public class Player implements Runnable {
         this.gameControl = gameControl;
         this.disconnected = false;
         
-        if(playerNumber == 1) {
-        	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
-        } else {
-        	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 50, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
-        }
+        resetRacket();
         
         this.playerOutput = "Player " + Integer.toString(playerNumber) + ". ";
     }
@@ -145,6 +150,17 @@ public class Player implements Runnable {
 	}
 	
 	public void resetRacket() {
+		if(gameControl.getCurrentState().getID() == 3)  {
+			if(playerNumber == 1)
+	        	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+	        else
+	        	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 50, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+		} else {
+			this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+		}
+	}
+	
+	public void setMultiplayerRacket() {
 		if(playerNumber == 1)
         	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
         else

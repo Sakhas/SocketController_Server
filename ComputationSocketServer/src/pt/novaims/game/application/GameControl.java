@@ -96,7 +96,6 @@ public class GameControl extends StateBasedGame implements Runnable {
 	public void pauseActiveGameDueDisconnection(Player playerDisconnected) {
 		int stateId = this.getCurrentStateID();
 		if(!gamePaused) {
-			
 			if (stateId == 2) {
 				pauseState = new PauseState(this.getCurrentState(), playerDisconnected, this, playerControl);
 				this.addState(pauseState);
@@ -106,7 +105,8 @@ public class GameControl extends StateBasedGame implements Runnable {
 			}
 			gamePaused = true;
 			this.enterState(4);
-		} else if (gamePaused && stateId == 3) {
+		} else if (gamePaused) {
+			System.out.println("Other player disconnected");
 			pauseState.otherPlayerDisconnected(playerDisconnected);
 		}
 	}

@@ -66,9 +66,8 @@ public class PlayerControl implements Runnable {
             	System.out.println("TCP socket connection started");
             	System.out.println("Game running:  " + game.isGameRunning());
             	clientSocket = this.serverSocket.accept();
-            	if(playerCount < 2) {
-            		System.out.println("1. IF");
-            		if(!game.isGameRunning()) {
+            	if(playerCount < 2 || player1.isDisconnected() || player2.isDisconnected()) {
+            		if(!game.isGameRunning() && playerCount < 2) {
 	            		System.out.println("Adding new player");
 	            		playerCount++;
 	            		Player player = new Player(this, clientSocket, playerCount, game);
@@ -80,7 +79,6 @@ public class PlayerControl implements Runnable {
 	            		}
 	            		System.out.println("Player " + playerCount +". Connected");
             		} else {
-            			System.out.println("2. IF");
                 		System.out.println("Player1 IP: " + player1.getIp()  + "Player connecting: " + clientSocket.getInetAddress().toString());
                 		if(player1 != null && player1.getIp().equals(clientSocket.getInetAddress().toString())) {
                 			player1.setClientSocket(clientSocket);
@@ -169,5 +167,22 @@ public class PlayerControl implements Runnable {
     	game.playerConnectedBackToGame(player);
 	}
 
+    public void updatePlayerCount() {
+		if(player1 != null) {
+			if(!player1.isDisconnected()) {
+				System.out.println("plauer 1 found");
+			} else {
+				playerDisconnected(player1);
+			}	
+		}
+		if(player2 != null) {
+			if(!player2.isDisconnected()) {
+				System.out.println("player 2 found");
+			} else {
+				playerDisconnected(player2);
+			}
+		}
+		
+    }
 
 }

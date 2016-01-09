@@ -36,6 +36,7 @@ public class SingleplayerGame extends BasicGameState {
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame stateBasedGame) throws SlickException {
+		player.resetRacket();
 		racket = player.getRacket();				
 		ball = new Ball((int) Math.ceil(Math.random()* GameInfo.WIDTH), GameInfo.TILE_HEIGHT*GameInfo.ARRAY_ROWS + GameInfo.TILE_HEIGHT_LOC + 20, 6);
 		org.newdawn.slick.geom.Vector2f ballVelocityVector = new org.newdawn.slick.geom.Vector2f();
