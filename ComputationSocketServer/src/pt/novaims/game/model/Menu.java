@@ -56,7 +56,7 @@ public class Menu extends BasicGameState {
 		playerCount = playerControl.getPlayerCount();
 		if (playerCount > 0 && container.getInput().isKeyPressed(Input.KEY_1)) {
 			gameControl.setGameRunning(true);
-			SingleplayerGame singleGame = new SingleplayerGame(2, playerControl.getPlayer1());
+			SingleplayerGame singleGame = new SingleplayerGame(2, playerControl.getPlayer1(), gameControl);
 			singleGame.init(container, sbg);
 			gameControl.setSinglePlayerGame(singleGame);
 			sbg.addState(singleGame);
@@ -64,7 +64,7 @@ public class Menu extends BasicGameState {
 		}
 		else if (playerCount > 1 && container.getInput().isKeyPressed(Input.KEY_2)) {
 			gameControl.setGameRunning(true);
-			MultiplayerGame multiGame = new MultiplayerGame(3, playerControl.getPlayer1(), playerControl.getPlayer2());
+			MultiplayerGame multiGame = new MultiplayerGame(3, playerControl.getPlayer1(), playerControl.getPlayer2(), gameControl);
 			multiGame.init(container, sbg);
 			gameControl.setMultiplayerGame(multiGame);
 			sbg.addState(multiGame);

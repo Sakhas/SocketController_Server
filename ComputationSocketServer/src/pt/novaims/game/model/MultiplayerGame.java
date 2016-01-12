@@ -10,6 +10,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import pt.novaims.game.application.GameControl;
 import pt.novaims.game.util.GameInfo;
 import pt.novaims.server.model.Player;
 
@@ -23,9 +24,10 @@ public class MultiplayerGame extends BasicGameState {
 	private boolean gameOver = false;
 	private ArrayList<Tile> tileList;
 	private int id;
+	private GameControl gameControl;
 	
 	
-	public MultiplayerGame(int id, Player player1, Player player2) {
+	public MultiplayerGame(int id, Player player1, Player player2, GameControl gameControl) {
 		this.id = id;
 		this.player1 = player1;
 		this.player2 = player2;
@@ -33,6 +35,7 @@ public class MultiplayerGame extends BasicGameState {
 		this.player2.setMultiplayerRacket();
 		this.p1Racket = player1.getRacket();
 		this.p2Racket = player2.getRacket();
+		this.gameControl = gameControl;
 	}
 
 	@Override
@@ -68,8 +71,8 @@ public class MultiplayerGame extends BasicGameState {
 	    if(player1.didMissBall()) {
 	    	player1.updateBallCount();
 	    	if(player1.getBallsLeft() == 0){
-	    		player1.resetBallsLeft();
-	    		this.init(container, stateBasedGame);
+	    		gameControl.setGameRunning(false);
+				stateBasedGame.enterState(1);
 	    	}
 	    	else {
 	    		this.tryAgain(container);
@@ -78,8 +81,8 @@ public class MultiplayerGame extends BasicGameState {
 	    else if(player2.didMissBall()) {
 	    	player2.updateBallCount();
 	    	if(player2.getBallsLeft() == 0){
-	    		player2.resetBallsLeft();
-	    		this.init(container, stateBasedGame);
+	    		gameControl.setGameRunning(false);
+				stateBasedGame.enterState(1);
 	    	}
 	    	else {
 	    		this.tryAgain(container);

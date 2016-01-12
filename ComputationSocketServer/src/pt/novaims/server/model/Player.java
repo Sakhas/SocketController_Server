@@ -152,19 +152,19 @@ public class Player implements Runnable {
 	public void resetRacket() {
 		if(gameControl.getCurrentState().getID() == 3)  {
 			if(playerNumber == 1)
-	        	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+	        	this.racket = new Rectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT);
 	        else
-	        	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 50, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+	        	this.racket = new Rectangle(GameInfo.WIDTH / 2 - 40, 50, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT);
 		} else {
-			this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+			this.racket = new Rectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT);
 		}
 	}
 	
 	public void setMultiplayerRacket() {
 		if(playerNumber == 1)
-        	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+        	this.racket = new Rectangle(GameInfo.WIDTH / 2 - 40, 550, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT);
         else
-        	this.racket = new RoundedRectangle(GameInfo.WIDTH / 2 - 40, 50, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT, 3);
+        	this.racket = new Rectangle(GameInfo.WIDTH / 2 - 40, 50, GameInfo.RACKET_WIDTH, GameInfo.RACKET_HEIGHT);
 	}
 	
 	public void ballMissed(){

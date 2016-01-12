@@ -13,6 +13,7 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import pt.novaims.game.application.GameControl;
 import pt.novaims.game.util.GameInfo;
 import pt.novaims.server.model.Player;
 
@@ -27,11 +28,13 @@ public class SingleplayerGame extends BasicGameState {
 	private boolean gameOver = false;
 	private ArrayList<Tile> tileList;
 	private int id;
+	private GameControl gameControl;
 	
-	public SingleplayerGame(int id, Player player) {
+	public SingleplayerGame(int id, Player player, GameControl gameControl) {
 		this.id = id;
 		this.player = player;
 		this.racket = player.getRacket();
+		this.gameControl = gameControl;
 	}
 	
 	@Override
@@ -63,6 +66,8 @@ public class SingleplayerGame extends BasicGameState {
 	    	ballsLeft--;
 	    	missCount++;
 	    	if(ballsLeft == 0){
+	    		gameControl.setGameRunning(false);
+				stateBasedGame.enterState(1);
 	    		ballsLeft = 3;
 	    		this.init(container, stateBasedGame);
 	    	}
@@ -109,13 +114,31 @@ public class SingleplayerGame extends BasicGameState {
 		}
 		
 		if(ball.getLocation().y < GameInfo.TILE_HEIGHT*GameInfo.ARRAY_ROWS + GameInfo.TILE_HEIGHT_LOC) {
-			checkBallInteractionWithTile();
+			checkBallInteractionWithTile(stateBasedGame);
 		}
 		
 		if(ball.getLocation().y >= GameInfo.HEIGHT - 20) {
 			ballMissed = true;
 		}
 	}
+	
+	/*private Direction checkBallCollision() { //For checking if the ball intersects a brick
+        for(int x = 0; x < board.length; x++) {  
+           for(int y = 0; y < board[x].length; y++) { //Loop through all bricks.. 
+               Rectangle brick = board[x][y]; //Get the brick at the position 
+               if(brick == null) {    
+                   continue;                               
+               }
+               Direction dir = getCollisionDirection(ball, brick); //See below 
+               if(dir != null) { //hit a brick!  
+                   board[x][y] = null; //Remove the brick it hit   
+                   return dir; //Return the direction  
+               }     
+          }
+       }
+       
+    return null;
+   } */
 	
 	public void initTileArray(Graphics graphics) {
 		tileList = new ArrayList<>();
@@ -148,7 +171,7 @@ public class SingleplayerGame extends BasicGameState {
 		}
 	}
 	
-	public void checkBallInteractionWithTile() {
+	public void checkBallInteractionWithTile(StateBasedGame stateBasedGame) {
 		ArrayList <Tile> toRemove = new ArrayList<>();
 		
 		for(Tile t : tileList){
@@ -177,6 +200,11 @@ public class SingleplayerGame extends BasicGameState {
 		for(Tile t : toRemove){
 			tileList.remove(t);
 		}
+		if(tileList.isEmpty()){
+			gameControl.setGameRunning(false);
+			stateBasedGame.enterState(1);
+		}
+			
 		
 		toRemove.clear();
 	}
